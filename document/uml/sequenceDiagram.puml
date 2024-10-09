@@ -1,0 +1,67 @@
+@startuml
+
+actor Client
+participant "ProductAdapter" as PA
+participant "ProductInputPort" as PIP
+participant "ProductOutputPort" as POP
+database "Database" as DB
+
+== Add Product ==
+Client -> PA : addProduct(product)
+PA -> PIP : addProduct(product)
+PIP -> POP : save(product)
+POP -> DB : persist(product)
+DB --> POP : confirmation
+POP --> PIP : confirmation
+PIP --> PA : confirmation
+PA --> Client : OK response
+
+== Get All Products ==
+Client -> PA : getAllProducts()
+PA -> PIP : getAllProducts()
+PIP -> POP : findAll()
+POP -> DB : select all products
+DB --> POP : product list
+POP --> PIP : product list
+PIP --> PA : product list
+PA --> Client : product list
+
+== Get Product by ID ==
+Client -> PA : getProductById(id)
+PA -> PIP : getProductById(id)
+PIP -> POP : findById(id)
+POP -> DB : select product by id
+DB --> POP : product
+POP --> PIP : product
+PIP --> PA : product
+PA --> Client : product
+
+== Update Product ==
+Client -> PA : updateProduct(product)
+PA -> PIP : updateProduct(product)
+PIP -> POP : findById(product.id)
+POP -> DB : select product by id
+DB --> POP : existing product
+POP --> PIP : existing product
+PIP -> POP : save(updated product)
+POP -> DB : update product
+DB --> POP : confirmation
+POP --> PIP : confirmation
+PIP --> PA : confirmation
+PA --> Client : OK response
+
+== Delete Product ==
+Client -> PA : deleteProduct(id)
+PA -> PIP : deleteProduct(id)
+PIP -> POP : findById(id)
+POP -> DB : select product by id
+DB --> POP : product
+POP --> PIP : product
+PIP -> POP : delete(product)
+POP -> DB : delete product
+DB --> POP : confirmation
+POP --> PIP : confirmation
+PIP --> PA : confirmation
+PA --> Client : OK response
+
+@enduml
