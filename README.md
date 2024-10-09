@@ -101,3 +101,155 @@ Swagger UI를 통해 제공되는 API 문서는 다음과 같습니다:
 ## 라이선스
 
 이 프로젝트는 소스 비공개 정책에 따라 배포됩니다.
+
+## UML 다이어그램
+
+이 프로젝트의 UML 다이어그램은 다음과 같습니다:
+
+### 클래스 다이어그램
+```plantuml
+@startuml
+
+package "Domain" {
+  class Product {
+    -Long productId
+    -ProductName productName
+  }
+  
+  class ProductName {
+    -String name
+  }
+}
+
+package "Application" {
+  interface ProductUseCase {
+    +void addProduct(Product product)
+    +List<Product> getAllProducts()
+    +Product getProductById(Long productId)
+    +void updateProduct(Product product)
+    +void deleteProduct(Long id)
+    +Object findProductById(long l)
+  }
+  
+  class ProductInputPort {
+    -ProductOutputPort productOutputPort
+  }
+  
+  interface ProductOutputPort {
+    +void save(Product product)
+    +List<Product> findAll()
+    +Product findById(Long productId)
+    +void delete(Product existingProduct)
+  }
+}
+
+package "Infrastructure" {
+  class JpaProductAdapter {
+    -EntityManager entityManager
+  }
+  
+  class InMemoryProductAdapter {
+    -List<Product> products
+    -AtomicLong idGenerator
+  }
+  
+  class SwaggerConfig {
+    +OpenAPI openAPI()
+  }
+  
+  class DatabaseConfig {
+  }
+}
+
+package "Framework" {
+  class ProductAdapter {
+    -ProductUseCase productUseCase
+  }
+  
+  class DemoApplication {
+  }
+}
+
+Product "1" *-- "1" ProductName
+
+ProductUseCase <|.. ProductInputPort
+ProductOutputPort <|.. JpaProductAdapter
+ProductOutputPort <|.. InMemoryProductAdapter
+ProductUseCase <-- ProductAdapter
+
+ProductInputPort --> ProductOutputPort
+
+@enduml
+```
+
+### 시퀀스 다이어그램
+
+```plantuml
+@startuml
+
+actor Client
+participant "ProductAdapter" as PA
+participant "ProductInputPort" as PIP
+participant "ProductOutputPort" as POP
+database "Database" as DB
+
+== Add Product ==
+Client -> PA : addProduct(product)
+PA -> PIP : addProduct(product)
+PIP -> POP : save(product)
+POP -> DB : persist(product)
+DB --> POP : confirmation
+POP --> PIP : confirmation
+PIP --> PA : confirmation
+PA --> Client : OK response
+
+== Get All Products ==
+Client -> PA : getAllProducts()
+PA -> PIP : getAllProducts()
+PIP -> POP : findAll()
+POP -> DB : select all products
+DB --> POP : product list
+POP --> PIP : product list
+PIP --> PA : product list
+PA --> Client : product list
+
+== Get Product by ID ==
+Client -> PA : getProductById(id)
+PA -> PIP : getProductById(id)
+PIP -> POP : findById(id)
+POP -> DB : select product by id
+DB --> POP : product
+POP --> PIP : product
+PIP --> PA : product
+PA --> Client : product
+
+== Update Product ==
+Client -> PA : updateProduct(product)
+PA -> PIP : updateProduct(product)
+PIP -> POP : findById(product.id)
+POP -> DB : select product by id
+DB --> POP : existing product
+POP --> PIP : existing product
+PIP -> POP : save(updated product)
+POP -> DB : update product
+DB --> POP : confirmation
+POP --> PIP : confirmation
+PIP --> PA : confirmation
+PA --> Client : OK response
+
+== Delete Product ==
+Client -> PA : deleteProduct(id)
+PA -> PIP : deleteProduct(id)
+PIP -> POP : findById(id)
+POP -> DB : select product by id
+DB --> POP : product
+POP --> PIP : product
+PIP -> POP : delete(product)
+POP -> DB : delete product
+DB --> POP : confirmation
+POP --> PIP : confirmation
+PIP --> PA : confirmation
+PA --> Client : OK response
+
+@enduml
+```
