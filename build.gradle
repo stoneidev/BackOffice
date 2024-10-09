@@ -1,0 +1,56 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.1.5'
+	id 'io.spring.dependency-management' version '1.1.6'
+}
+
+group = 'com.stoneistudio.lds'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(17)
+	}
+}
+
+apply plugin: 'io.spring.dependency-management'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter'
+	implementation 'org.springframework.boot:spring-boot-starter-web' // 웹 스타터
+	implementation 'org.springframework.boot:spring-boot-starter-actuator' // 모니터링
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa' // JPA
+	implementation 'org.flywaydb:flyway-core:9.16.0' // DB 스키마 버전 관리
+	implementation 'io.cucumber:cucumber-spring:7.11.0' // Cucumber Spring
+	implementation 'io.cucumber:cucumber-java:7.11.0' // Cucumber Java
+	implementation 'jakarta.persistence:jakarta.persistence-api:3.1.0'
+	implementation 'org.springframework.boot:spring-boot-starter-web' // 웹 스타터
+	implementation 'com.h2database:h2' // H2 데이터베이스
+	testImplementation 'io.cucumber:cucumber-spring:7.11.0'
+	testImplementation 'io.cucumber:cucumber-java:7.11.0'
+	testImplementation 'io.cucumber:cucumber-junit-platform-engine:7.11.0'
+	testImplementation 'org.junit.platform:junit-platform-suite'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation 'io.swagger.core.v3:swagger-annotations:2.2.2' // Swagger 어노테이션 추가
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
+	runtimeOnly 'com.h2database:h2'
+
+	// Lombok 의존성 추가
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	testCompileOnly 'org.projectlombok:lombok'
+	testAnnotationProcessor 'org.projectlombok:lombok'
+}
+
+test {
+	useJUnitPlatform()
+	systemProperty("cucumber.junit-platform.naming-strategy", "long")
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
