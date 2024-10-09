@@ -55,16 +55,15 @@ public class ProductAdapterTest {
     @Test
     public void testGetAllProducts() throws Exception {
         List<Product> products = Arrays.asList(
-                new Product(new ProductName("Product 1").getName()), // 수정된 부분
-                new Product(new ProductName("Product 2").getName())  // 수정된 부분
-        );
+                new Product("Product 1"),
+                new Product("Product 2"));
         when(productUseCase.getAllProducts()).thenReturn(products);
 
         mockMvc.perform(get("/api/products"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$[0].productName.value").value("Product 1")) // 수정된 부분
-                .andExpect(jsonPath("$[1].productName.value").value("Product 2")); // 수정된 부분
+                .andExpect(jsonPath("$[0].productName.name").value("Product 1"))
+                .andExpect(jsonPath("$[1].productName.name").value("Product 2"));
 
         verify(productUseCase, times(1)).getAllProducts();
     }
@@ -72,14 +71,14 @@ public class ProductAdapterTest {
     @Test
     public void testGetProductById() throws Exception {
         Long productId = 1L;
-        Product product = new Product(new ProductName("Existing Product").getName()); // 수정된 부분
+        Product product = new Product("Existing Product");
         product.setProductId(productId);
 
         when(productUseCase.getProductById(productId)).thenReturn(product);
 
         mockMvc.perform(get("/api/products/{id}", productId))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.productName.value").value("Existing Product")); // 수정된 부분
+                .andExpect(jsonPath("$.productName.name").value("Existing Product"));
 
         verify(productUseCase, times(1)).getProductById(productId);
     }

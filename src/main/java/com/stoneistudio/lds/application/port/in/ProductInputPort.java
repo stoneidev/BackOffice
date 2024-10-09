@@ -29,7 +29,11 @@ public class ProductInputPort implements ProductUseCase {
 
     @Override
     public Product getProductById(Long productId) {
-        return productOutputPort.findById(productId);
+        Product product = productOutputPort.findById(productId);
+        if (product == null) {
+            throw new IllegalArgumentException("해당 ID의 제품이 존재하지 않습니다.");
+        }
+        return product;
     }
 
     @Override

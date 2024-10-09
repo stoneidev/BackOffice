@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @CucumberContextConfiguration
 @SpringBootTest(properties = { "spring.profiles.active=test" })
@@ -23,6 +24,7 @@ public class ProductSteps {
     private Product product;
     private List<Product> productList;
     private Long productId;
+    private Exception lastException;
 
     @Given("a product with name {string}")
     public void a_product_with_name(String name) {
@@ -65,13 +67,18 @@ public class ProductSteps {
 
     @When("I request the product with ID {long}")
     public void i_request_the_product_with_id(Long id) {
-        product = productInputPort.getProductById(productId);
+        product = productInputPort.getProductById(id);
     }
 
     @Then("I should receive the correct product details")
     public void i_should_receive_the_correct_product_details() {
         assertNotNull(product);
         assertEquals(productId, product.getProductId());
+    }
+
+    @Then("I should receive no product")
+    public void i_should_receive_no_product() {
+        assertNull(product);
     }
 
     @When("I update the product name to {string}")
@@ -83,18 +90,45 @@ public class ProductSteps {
     @Then("the product should be updated successfully")
     public void the_product_should_be_updated_successfully() {
         Product updatedProduct = productInputPort.getProductById(productId);
-        assertEquals("Updated Product", updatedProduct.getProductName().getName()); // 수정된 부분
+        assertEquals("Updated Product", updatedProduct.getProductName().getName());
+    }
+
+    @Given("a product with ID {long} does not exist in the system")
+    public void a_product_with_id_does_not_exist_in_the_system(Long id) {
+        productId = id;
+        product = new Product("Non-existent Product");
+        product.setProductId(productId);
+    }
+
+    @When("I try to update the non-existent product")
+    public void i_try_to_update_the_non_existent_product() {
+        productInputPort.updateProduct(product);
+    }
+
+    @Then("no update should occur")
+    public void no_update_should_occur() {
+        assertNull(productInputPort.getProductById(productId));
     }
 
     @When("I delete the product with ID {long}")
     public void i_delete_the_product_with_id(Long id) {
-        productInputPort.deleteProduct(productId);
+        productInputPort.deleteProduct(id);
     }
 
     @Then("the product should be removed from the system")
     public void the_product_should_be_removed_from_the_system() {
-        Product deletedProduct = productInputPort.getProductById(productId);
-        assertNull(deletedProduct);
+        assertNull(productInputPort.getProductById(productId));
+    }
+
+    @When("I try to delete the non-existent product")
+    public void i_try_to_delete_the_non_existent_product() {
+        productInputPort.deleteProduct(productId);
+    }
+
+    @Then("no deletion should occur")
+    public void no_deletion_should_occur() {
+        // 존재하지 않는 제품을 삭제하려고 시도해도 예외가 발생하지 않아야 합니다.
+        assertDoesNotThrow(() -> productInputPort.deleteProduct(productId));
     }
 
     @Given("a product with id {long} and name {string}")
@@ -113,5 +147,11 @@ public class ProductSteps {
         Product retrievedProduct = productInputPort.getProductById(id);
         assertNotNull(retrievedProduct);
         assertEquals(product.getProductName(), retrievedProduct.getProductName());
+    }
+
+    @Then("the product with ID {long} should not exist in the system")
+    public void the_product_with_id_should_not_exist_in_the_system(Long id) {
+        // 제품이 존재하지 않을 때 IllegalArgumentException이 발생해야 합니다.
+        assertThrows(IllegalArgumentException.class, () -> productInputPort.getProductById(id));
     }
 }
