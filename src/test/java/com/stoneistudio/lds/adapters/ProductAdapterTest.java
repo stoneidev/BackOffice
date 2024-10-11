@@ -15,7 +15,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -61,8 +60,8 @@ public class ProductAdapterTest {
         mockMvc.perform(get("/api/products"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$[0].productName.name").value("Product 1"))
-                .andExpect(jsonPath("$[1].productName.name").value("Product 2"));
+                .andExpect(jsonPath("$[0].name").value("Product 1"))
+                .andExpect(jsonPath("$[1].name").value("Product 2"));
 
         verify(productUseCase, times(1)).getAllProducts();
     }
@@ -77,7 +76,7 @@ public class ProductAdapterTest {
 
         mockMvc.perform(get("/api/products/{id}", productId))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.productName.name").value("Existing Product"));
+                .andExpect(jsonPath("$.name").value("Existing Product"));
 
         verify(productUseCase, times(1)).getProductById(productId);
     }
@@ -104,5 +103,22 @@ public class ProductAdapterTest {
                 .andExpect(status().isOk());
 
         verify(productUseCase, times(1)).deleteProduct(productId);
+    }
+
+    @Test
+    public void testGetProductsByCategory() throws Exception {
+        Long categoryId = 1L;
+        List<Product> products = Arrays.asList(
+                new Product("Product 1", categoryId),
+                new Product("Product 2", categoryId));
+        when(productUseCase.getProductsByCategory(categoryId)).thenReturn(products);
+
+        mockMvc.perform(get("/api/products/category/{categoryId}", categoryId))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$[0].name").value("Product 1"))
+                .andExpect(jsonPath("$[1].name").value("Product 2"));
+
+        verify(productUseCase, times(1)).getProductsByCategory(categoryId);
     }
 }

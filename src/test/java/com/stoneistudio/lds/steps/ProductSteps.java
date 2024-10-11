@@ -1,8 +1,7 @@
 package com.stoneistudio.lds.steps;
 
-import com.stoneistudio.lds.application.port.in.ProductInputPort;
+import com.stoneistudio.lds.application.usecase.ProductUseCase;
 import com.stoneistudio.lds.domain.product.entity.Product;
-import com.stoneistudio.lds.domain.product.value.ProductName;
 
 import io.cucumber.java.After;
 import io.cucumber.java.en.*;
@@ -19,12 +18,12 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ProductSteps {
 
     @Autowired
-    private ProductInputPort productInputPort;
+    private ProductUseCase productUseCase;
 
     private Product product;
     private List<Product> productList;
     private Long productId;
-    private Exception lastException; // lastException 변수 선언
+    private Exception lastException;
 
     @After
     public void tearDown() {
@@ -41,7 +40,7 @@ public class ProductSteps {
 
     @When("I add the product")
     public void i_add_the_product() {
-        productInputPort.addProduct(product);
+        productUseCase.addProduct(product);
     }
 
     @Then("the product should be saved successfully")
@@ -51,13 +50,13 @@ public class ProductSteps {
 
     @Given("there are existing products in the system")
     public void there_are_existing_products_in_the_system() {
-        productInputPort.addProduct(new Product("Existing Product 1"));
-        productInputPort.addProduct(new Product("Existing Product 2"));
+        productUseCase.addProduct(new Product("Existing Product 1"));
+        productUseCase.addProduct(new Product("Existing Product 2"));
     }
 
     @When("I request all products")
     public void i_request_all_products() {
-        productList = productInputPort.getAllProducts();
+        productList = productUseCase.getAllProducts();
     }
 
     @Then("I should receive a list of all products")
@@ -69,14 +68,23 @@ public class ProductSteps {
     @Given("a product with ID {long} exists in the system")
     public void a_product_with_id_exists_in_the_system(Long id) {
         product = new Product("Test Product");
-        productInputPort.addProduct(product);
+        productUseCase.addProduct(product);
         productId = product.getProductId();
     }
 
     @When("I request the product with ID {long}")
     public void i_request_the_product_with_id(Long id) {
         try {
-            product = productInputPort.getProductById(productId);
+            product = productUseCase.getProductById(productId);
+        } catch (IllegalArgumentException e) {
+            lastException = e;
+        }
+    }
+
+    @When("I request the product with ID not exist")
+    public void i_request_the_product_with_id_not_exist() {
+        try {
+            product = productUseCase.getProductById(999L);
         } catch (IllegalArgumentException e) {
             lastException = e;
         }
@@ -90,15 +98,14 @@ public class ProductSteps {
 
     @Then("I should receive no product")
     public void i_should_receive_no_product() {
-        assertNotNull(lastException);
-        assertTrue(lastException instanceof IllegalArgumentException);
+        assertNull(product);
     }
 
     @When("I update the product name to {string}")
     public void i_update_the_product_name_to(String newName) {
-        product.setProductName(new ProductName(newName));
+        product.setName(newName);
         try {
-            productInputPort.updateProduct(product);
+            productUseCase.updateProduct(product);
         } catch (IllegalArgumentException e) {
             lastException = e;
         }
@@ -106,8 +113,8 @@ public class ProductSteps {
 
     @Then("the product should be updated successfully")
     public void the_product_should_be_updated_successfully() {
-        Product updatedProduct = productInputPort.getProductById(productId);
-        assertEquals("Updated Product", updatedProduct.getProductName().getName());
+        Product updatedProduct = productUseCase.getProductById(productId);
+        assertEquals("Updated Product", updatedProduct.getName());
     }
 
     @Given("a product with ID {long} does not exist in the system")
@@ -120,7 +127,7 @@ public class ProductSteps {
     @When("I try to update the non-existent product")
     public void i_try_to_update_the_non_existent_product() {
         try {
-            productInputPort.updateProduct(product);
+            productUseCase.updateProduct(product);
         } catch (IllegalArgumentException e) {
             lastException = e;
         }
@@ -135,7 +142,7 @@ public class ProductSteps {
     @When("I delete the product with ID {long}")
     public void i_delete_the_product_with_id(Long id) {
         try {
-            productInputPort.deleteProduct(productId);
+            productUseCase.deleteProduct(productId);
         } catch (IllegalArgumentException e) {
             lastException = e;
         }
@@ -143,18 +150,18 @@ public class ProductSteps {
 
     @Then("it should be deleted successfully")
     public void itShouldBeDeletedSuccessfully() {
-        assertThrows(IllegalArgumentException.class, () -> productInputPort.getProductById(productId));
+        assertThrows(IllegalArgumentException.class, () -> productUseCase.getProductById(productId));
     }
 
     @Then("the product should be removed from the system")
     public void the_product_should_be_removed_from_the_system() {
-        assertThrows(IllegalArgumentException.class, () -> productInputPort.getProductById(productId));
+        assertNull(productUseCase.getProductById(productId));
     }
 
     @When("I try to delete the non-existent product")
     public void i_try_to_delete_the_non_existent_product() {
         try {
-            productInputPort.deleteProduct(999999L);
+            productUseCase.deleteProduct(999999L);
         } catch (IllegalArgumentException e) {
             lastException = e;
         }
@@ -168,6 +175,30 @@ public class ProductSteps {
 
     @Then("the product with ID {long} should not exist in the system")
     public void the_product_with_id_should_not_exist_in_the_system(Long id) {
-        assertThrows(IllegalArgumentException.class, () -> productInputPort.getProductById(id));
+        assertThrows(IllegalArgumentException.class, () -> productUseCase.getProductById(id));
+    }
+
+    @Given("카테고리 ID가 {long}인 카테고리가 존재합니다")
+    public void 카테고리_id가_인_카테고리가_존재합니다(Long categoryId) {
+        // 이 step에서는 특별한 작업이 필요 없습니다. 카테고리의 존재를 가정합니다.
+    }
+
+    @Given("해당 카테고리에 {string}과 {string}가 속해 있습니다")
+    public void 해당_카테고리에_과_가_속해_있습니다(String product1, String product2) {
+        productUseCase.addProduct(new Product(product1, 1L));
+        productUseCase.addProduct(new Product(product2, 1L));
+    }
+
+    @When("카테고리 ID {long}로 제품을 조회합니다")
+    public void 카테고리_id로_제품을_조회합니다(Long categoryId) {
+        productList = productUseCase.getProductsByCategory(categoryId);
+    }
+
+    @Then("조회된 제품 목록에는 {string}과 {string}가 포함되어 있어야 합니다")
+    public void 조회된_제품_목록에는_과_가_포함되어_있어야_합니다(String product1, String product2) {
+        assertNotNull(productList);
+        assertEquals(2, productList.size());
+        assertTrue(productList.stream().anyMatch(p -> p.getName().equals(product1)));
+        assertTrue(productList.stream().anyMatch(p -> p.getName().equals(product2)));
     }
 }

@@ -84,8 +84,8 @@ public class CategorySteps {
     @Then("{string} 제품은 {string} 카테고리에 속해야 한다")
     public void 제품은_카테고리에_속해야_한다(String productName, String categoryName) {
         var updatedProduct = productUseCase.getProductById(product.getProductId());
-        assertNotNull(updatedProduct.getCategory());
-        assertEquals(parentCategory.getCategoryId(), updatedProduct.getCategory().getCategoryId());
+        assertNotNull(updatedProduct.getCategoryId());
+        assertEquals(parentCategory.getCategoryId(), updatedProduct.getCategoryId());
     }
 
     @Given("{string} 카테고리에 속한 {string} 제품이 있을 때")
@@ -103,7 +103,7 @@ public class CategorySteps {
 
     @Then("{string} 제품은 어떤 카테고리에도 속하지 않아야 한다")
     public void 제품은_어떤_카테고리에도_속하지_않아야_한다(String productName) {
-        var updatedProduct = (Product) productUseCase.findProductById(product.getProductId());
-        assertNull(updatedProduct.getCategory());
+        var updatedProduct = productUseCase.findProductById(product.getProductId());
+        assertNull(((Product) updatedProduct).getCategoryId());
     }
 }

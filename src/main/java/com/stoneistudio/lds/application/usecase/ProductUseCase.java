@@ -16,4 +16,6 @@ public interface ProductUseCase {
     void deleteProduct(Long id);
 
     Object findProductById(long l);
+
+    List<Product> getProductsByCategory(Long categoryId);
 }

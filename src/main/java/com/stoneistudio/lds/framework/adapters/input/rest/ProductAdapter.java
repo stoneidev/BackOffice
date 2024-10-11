@@ -3,9 +3,8 @@ package com.stoneistudio.lds.framework.adapters.input.rest;
 import com.stoneistudio.lds.application.usecase.ProductUseCase;
 import com.stoneistudio.lds.domain.product.entity.Product;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,15 +16,14 @@ public class ProductAdapter {
 
     private final ProductUseCase productUseCase;
 
-    @Autowired
     public ProductAdapter(ProductUseCase productUseCase) {
         this.productUseCase = productUseCase;
     }
 
     @Operation(summary = "Add a new product", description = "This endpoint adds a new product to the system.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Product added successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid input")
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Product added successfully"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid input")
     })
     @PostMapping
     public ResponseEntity<Void> addProduct(@RequestBody Product product) {
@@ -60,5 +58,12 @@ public class ProductAdapter {
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         productUseCase.deleteProduct(id);
         return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "카테고리별 제품 조회", description = "지정된 카테고리 ID에 속한 모든 제품을 조회합니다.")
+    @GetMapping("/category/{categoryId}")
+    public ResponseEntity<List<Product>> getProductsByCategory(@PathVariable Long categoryId) {
+        List<Product> products = productUseCase.getProductsByCategory(categoryId);
+        return ResponseEntity.ok(products);
     }
 }

@@ -1,18 +1,14 @@
 package com.stoneistudio.lds.domain.product.entity;
 
-import com.stoneistudio.lds.domain.category.entity.Category;
-import com.stoneistudio.lds.domain.product.value.ProductName;
-
 import jakarta.persistence.*;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name = "product")
+@Data
 @Getter
-@Setter
 @NoArgsConstructor
 public class Product {
     @Id
@@ -20,15 +16,22 @@ public class Product {
     @Column(name = "product_id")
     private Long productId;
 
-    @Embedded
-    private ProductName productName;
+    @Column(name = "name", nullable = false)
+    private String name;
 
-    @JsonBackReference
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
-    private Category category;
+    @Column(name = "category_id")
+    private Long categoryId;
 
-    public Product(String productName) {
-        this.productName = new ProductName(productName);
+    public Product(String name) {
+        this.name = name;
+    }
+
+    public Product(String name, Long categoryId) {
+        this.name = name;
+        this.categoryId = categoryId;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

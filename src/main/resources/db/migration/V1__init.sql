@@ -1,21 +1,18 @@
 CREATE TABLE category (
-    category_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    category_id BIGINT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
     parent_id BIGINT,
-    depth INT NOT NULL
+    depth INT,
+    FOREIGN KEY (parent_id) REFERENCES category (category_id)
 );
-
-ALTER TABLE category
-ADD CONSTRAINT fk_category_parent FOREIGN KEY (parent_id) REFERENCES category (category_id);
 
 CREATE TABLE product (
-    product_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    product_name VARCHAR(255) NOT NULL,
-    category_id BIGINT
+    product_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL,
+    category_id BIGINT,
+    -- 다른 필드들...
+    FOREIGN KEY (category_id) REFERENCES category (category_id)
 );
-
-ALTER TABLE product
-ADD CONSTRAINT fk_product_category FOREIGN KEY (category_id) REFERENCES category (category_id);
 
 CREATE TABLE product_qa (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -26,3 +23,4 @@ CREATE TABLE product_qa (
     answered_at TIMESTAMP,
     FOREIGN KEY (product_id) REFERENCES product (product_id)
 );
+

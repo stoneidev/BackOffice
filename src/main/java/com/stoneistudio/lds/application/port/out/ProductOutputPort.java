@@ -14,4 +14,6 @@ public interface ProductOutputPort {
     void delete(Product existingProduct);
 
     void saveAll(List<Product> products);
+
+    List<Product> findAllByCategoryId(Long categoryId);
 }

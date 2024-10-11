@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional
 public class ProductInputPort implements ProductUseCase {
     private final ProductOutputPort productOutputPort;
 
@@ -30,9 +30,6 @@ public class ProductInputPort implements ProductUseCase {
     @Override
     public Product getProductById(Long productId) {
         Product product = productOutputPort.findById(productId);
-        if (product == null) {
-            throw new IllegalArgumentException("해당 ID의 제품이 존재하지 않��니다.");
-        }
         return product;
     }
 
@@ -42,8 +39,8 @@ public class ProductInputPort implements ProductUseCase {
         if (existingProduct == null) {
             throw new IllegalArgumentException("업데이트할 제품이 존재하지 않습니다.");
         }
-        existingProduct.setProductName(product.getProductName());
-        existingProduct.setCategory(product.getCategory());
+        existingProduct.setName(product.getName());
+        existingProduct.setCategoryId(product.getCategoryId());
         productOutputPort.save(existingProduct);
     }
 
@@ -59,5 +56,10 @@ public class ProductInputPort implements ProductUseCase {
     @Override
     public Product findProductById(long l) {
         return productOutputPort.findById(l);
+    }
+
+    @Override
+    public List<Product> getProductsByCategory(Long categoryId) {
+        return productOutputPort.findAllByCategoryId(categoryId);
     }
 }

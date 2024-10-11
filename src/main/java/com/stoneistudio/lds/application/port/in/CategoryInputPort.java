@@ -44,13 +44,6 @@ public class CategoryInputPort implements CategoryUseCase {
             throw new IllegalArgumentException("카테고리가 존재하지 않습니다.");
         }
         try {
-            category.getChildren().forEach(child -> {
-                child.getProducts().forEach(product -> product.setCategory(null));
-                productOutputPort.saveAll(child.getProducts());
-            });
-            category.getProducts().forEach(product -> product.setCategory(null));
-            productOutputPort.saveAll(category.getProducts());
-
             categoryOutputPort.delete(category);
         } catch (Exception e) {
             logger.error("카테고리 삭제 중 오류가 발생했습니다.", e);
@@ -81,7 +74,7 @@ public class CategoryInputPort implements CategoryUseCase {
         if (product == null || category == null) {
             throw new IllegalArgumentException("제품 또는 카테고리가 존재하지 않습니다.");
         }
-        product.setCategory(category);
+        product.setCategoryId(categoryId);
         productOutputPort.save(product);
     }
 
@@ -91,7 +84,7 @@ public class CategoryInputPort implements CategoryUseCase {
         if (product == null) {
             throw new IllegalArgumentException("제품이 존재하지 않습니다.");
         }
-        product.setCategory(null);
+        product.setCategoryId(null);
         productOutputPort.save(product);
     }
 }

@@ -16,7 +16,8 @@ Feature: Product Input Port Operations
     Then I should receive the correct product details
 
   Scenario: Get product by non-existent ID
-    When I request the product with ID 999
+    Given a product with ID 1 exists in the system
+    When I request the product with ID not exist
     Then I should receive no product
 
   Scenario: Update an existing product

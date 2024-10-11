@@ -1,6 +1,5 @@
 package com.stoneistudio.lds.domain.category.entity;
 
-import com.stoneistudio.lds.domain.product.entity.Product;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -35,9 +34,6 @@ public class Category {
     @Column(name = "depth")
     private Integer depth;
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
-    private List<Product> products = new ArrayList<>();
 
     public Category(String name) {
         this.name = name;
