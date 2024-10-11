@@ -27,6 +27,7 @@ class ProductQAAdapterTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @Mock
     private ObjectMapper objectMapper;
 
     @Mock
