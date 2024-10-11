@@ -32,7 +32,7 @@ Feature: Product Input Port Operations
   Scenario: Delete an existing product
     Given a product with ID 1 exists in the system
     When I delete the product with ID 1
-    Then the product with ID 1 should not exist in the system
+    Then the product should be removed from the system
 
   Scenario: Delete a non-existent product
     Given a product with ID 999 does not exist in the system

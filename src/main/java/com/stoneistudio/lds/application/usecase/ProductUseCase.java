@@ -1,6 +1,6 @@
 package com.stoneistudio.lds.application.usecase;
 
-import com.stoneistudio.lds.domain.entity.Product;
+import com.stoneistudio.lds.domain.product.entity.Product;
 
 import java.util.List;
 

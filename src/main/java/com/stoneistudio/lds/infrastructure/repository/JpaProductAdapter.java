@@ -1,7 +1,7 @@
 package com.stoneistudio.lds.infrastructure.repository;
 
 import com.stoneistudio.lds.application.port.out.ProductOutputPort;
-import com.stoneistudio.lds.domain.entity.Product;
+import com.stoneistudio.lds.domain.product.entity.Product;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
@@ -35,5 +35,12 @@ public class JpaProductAdapter implements ProductOutputPort {
     @Override
     public void delete(Product existingProduct) {
         entityManager.remove(existingProduct);
+    }
+
+    @Override
+    public void saveAll(List<Product> products) {
+        for (Product product : products) {
+            entityManager.persist(product);
+        }
     }
 }

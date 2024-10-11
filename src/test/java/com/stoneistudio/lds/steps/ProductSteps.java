@@ -1,8 +1,8 @@
 package com.stoneistudio.lds.steps;
 
 import com.stoneistudio.lds.application.port.in.ProductInputPort;
-import com.stoneistudio.lds.domain.entity.Product;
-import com.stoneistudio.lds.domain.value.ProductName;
+import com.stoneistudio.lds.domain.product.entity.Product;
+import com.stoneistudio.lds.domain.product.value.ProductName;
 
 import io.cucumber.java.After;
 import io.cucumber.java.en.*;
@@ -135,10 +135,15 @@ public class ProductSteps {
     @When("I delete the product with ID {long}")
     public void i_delete_the_product_with_id(Long id) {
         try {
-            productInputPort.deleteProduct(id);
+            productInputPort.deleteProduct(productId);
         } catch (IllegalArgumentException e) {
             lastException = e;
         }
+    }
+
+    @Then("it should be deleted successfully")
+    public void itShouldBeDeletedSuccessfully() {
+        assertThrows(IllegalArgumentException.class, () -> productInputPort.getProductById(productId));
     }
 
     @Then("the product should be removed from the system")

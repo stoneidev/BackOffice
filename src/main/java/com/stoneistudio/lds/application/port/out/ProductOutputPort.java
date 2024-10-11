@@ -1,6 +1,6 @@
 package com.stoneistudio.lds.application.port.out;
 
-import com.stoneistudio.lds.domain.entity.Product;
+import com.stoneistudio.lds.domain.product.entity.Product;
 
 import java.util.List;
 
@@ -12,4 +12,6 @@ public interface ProductOutputPort {
     Product findById(Long productId);
 
     void delete(Product existingProduct);
+
+    void saveAll(List<Product> products);
 }

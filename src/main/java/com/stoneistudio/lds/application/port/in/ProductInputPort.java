@@ -2,13 +2,13 @@ package com.stoneistudio.lds.application.port.in;
 
 import com.stoneistudio.lds.application.port.out.ProductOutputPort;
 import com.stoneistudio.lds.application.usecase.ProductUseCase;
-import com.stoneistudio.lds.domain.entity.Product;
+import com.stoneistudio.lds.domain.product.entity.Product;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Service // @Component 대신 @Service 사용
+@Service
 @Transactional(rollbackFor = Exception.class)
 public class ProductInputPort implements ProductUseCase {
     private final ProductOutputPort productOutputPort;
@@ -31,7 +31,7 @@ public class ProductInputPort implements ProductUseCase {
     public Product getProductById(Long productId) {
         Product product = productOutputPort.findById(productId);
         if (product == null) {
-            throw new IllegalArgumentException("해당 ID의 제품이 존재하지 않습니다.");
+            throw new IllegalArgumentException("해당 ID의 제품이 존재하지 않��니다.");
         }
         return product;
     }
@@ -43,6 +43,7 @@ public class ProductInputPort implements ProductUseCase {
             throw new IllegalArgumentException("업데이트할 제품이 존재하지 않습니다.");
         }
         existingProduct.setProductName(product.getProductName());
+        existingProduct.setCategory(product.getCategory());
         productOutputPort.save(existingProduct);
     }
 

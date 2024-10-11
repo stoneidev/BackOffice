@@ -1,4 +1,4 @@
-package com.stoneistudio.lds.domain.value;
+package com.stoneistudio.lds.domain.product.value;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

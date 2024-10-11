@@ -1,7 +1,7 @@
 package com.stoneistudio.lds.framework.adapters.input.rest;
 
 import com.stoneistudio.lds.application.usecase.ProductUseCase;
-import com.stoneistudio.lds.domain.entity.Product;
+import com.stoneistudio.lds.domain.product.entity.Product;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
