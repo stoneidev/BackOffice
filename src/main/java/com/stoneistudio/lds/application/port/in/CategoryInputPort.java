@@ -4,7 +4,6 @@ import com.stoneistudio.lds.application.port.out.CategoryOutputPort;
 import com.stoneistudio.lds.application.port.out.ProductOutputPort;
 import com.stoneistudio.lds.application.usecase.CategoryUseCase;
 import com.stoneistudio.lds.domain.category.entity.Category;
-import com.stoneistudio.lds.domain.product.entity.Product;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
