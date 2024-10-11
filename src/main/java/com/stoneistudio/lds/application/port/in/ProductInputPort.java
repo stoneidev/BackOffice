@@ -57,7 +57,7 @@ public class ProductInputPort implements ProductUseCase {
     }
 
     @Override
-    public Object findProductById(long l) {
+    public Product findProductById(long l) {
         return productOutputPort.findById(l);
     }
 }
