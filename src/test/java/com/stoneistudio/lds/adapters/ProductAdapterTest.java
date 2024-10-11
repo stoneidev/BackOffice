@@ -2,7 +2,7 @@ package com.stoneistudio.lds.adapters;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stoneistudio.lds.application.usecase.ProductUseCase;
-import com.stoneistudio.lds.domain.entity.Product;
+import com.stoneistudio.lds.domain.product.entity.Product;
 import com.stoneistudio.lds.framework.adapters.input.rest.ProductAdapter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

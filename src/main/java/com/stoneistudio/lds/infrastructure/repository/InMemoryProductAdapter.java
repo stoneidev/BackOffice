@@ -1,7 +1,7 @@
 package com.stoneistudio.lds.infrastructure.repository;
 
 import com.stoneistudio.lds.application.port.out.ProductOutputPort;
-import com.stoneistudio.lds.domain.entity.Product;
+import com.stoneistudio.lds.domain.product.entity.Product;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
@@ -40,5 +40,12 @@ public class InMemoryProductAdapter implements ProductOutputPort {
     @Override
     public void delete(Product existingProduct) {
         products.removeIf(p -> p.getProductId().equals(existingProduct.getProductId()));
+    }
+
+    @Override
+    public void saveAll(List<Product> products) {
+        for (Product product : products) {
+            save(product);
+        }
     }
 }
