@@ -4,11 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import java.time.LocalDateTime;
-
-import com.stoneistudio.lds.domain.product.entity.Product;
 
 @Entity
 @Table(name = "product_qa")
@@ -20,10 +17,8 @@ public class ProductQA {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id")
-    @JsonBackReference
-    private Product product;
+    @Column(name = "product_id", nullable = false)
+    private Long productId;
 
     @Column(nullable = false)
     private String question;
@@ -37,8 +32,8 @@ public class ProductQA {
     @Column
     private LocalDateTime answeredAt;
 
-    public ProductQA(Product product, String question) {
-        this.product = product;
+    public ProductQA(Long productId, String question) {
+        this.productId = productId;
         this.question = question;
         this.createdAt = LocalDateTime.now();
     }

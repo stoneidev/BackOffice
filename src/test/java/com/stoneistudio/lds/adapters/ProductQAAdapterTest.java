@@ -2,7 +2,6 @@ package com.stoneistudio.lds.adapters;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stoneistudio.lds.application.usecase.ProductQAUseCase;
-import com.stoneistudio.lds.domain.product.entity.Product;
 import com.stoneistudio.lds.domain.productqa.entity.ProductQA;
 import com.stoneistudio.lds.framework.adapters.input.rest.ProductQAAdapter;
 import org.junit.jupiter.api.BeforeEach;
@@ -47,7 +46,7 @@ class ProductQAAdapterTest {
     void testAddProductQA() throws Exception {
         Long productId = 1L;
         String question = "How to use this product?";
-        ProductQA productQA = new ProductQA(new Product("Test Product"), question);
+        ProductQA productQA = new ProductQA(productId, question);
         productQA.setId(1L);
 
         when(productQAUseCase.addProductQA(eq(productId), eq(question))).thenReturn(productQA);
@@ -66,7 +65,7 @@ class ProductQAAdapterTest {
     void testGetProductQA() throws Exception {
         Long productId = 1L;
         Long qaId = 1L;
-        ProductQA productQA = new ProductQA(new Product("Test Product"), "Test Question");
+        ProductQA productQA = new ProductQA(productId, "Test Question");
         productQA.setId(qaId);
 
         when(productQAUseCase.getProductQA(eq(productId), eq(qaId))).thenReturn(productQA);
@@ -83,8 +82,8 @@ class ProductQAAdapterTest {
     void testGetAllProductQAs() throws Exception {
         Long productId = 1L;
         List<ProductQA> productQAs = Arrays.asList(
-                new ProductQA(new Product("Test Product"), "Question 1"),
-                new ProductQA(new Product("Test Product"), "Question 2"));
+                new ProductQA(productId, "Question 1"),
+                new ProductQA(productId, "Question 2"));
         productQAs.get(0).setId(1L);
         productQAs.get(1).setId(2L);
 

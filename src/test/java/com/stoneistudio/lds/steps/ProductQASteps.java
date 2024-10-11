@@ -1,7 +1,6 @@
 package com.stoneistudio.lds.steps;
 
 import com.stoneistudio.lds.application.usecase.ProductQAUseCase;
-import com.stoneistudio.lds.domain.product.entity.Product;
 import com.stoneistudio.lds.domain.productqa.entity.ProductQA;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
@@ -36,7 +35,7 @@ public class ProductQASteps {
 
     @When("I add a new QA with question {string} to the product")
     public void i_add_a_new_qa_with_question_to_the_product(String question) {
-        ProductQA newProductQA = new ProductQA(new Product("Test Product"), question);
+        ProductQA newProductQA = new ProductQA(1L, question);
         when(productQAUseCase.addProductQA(anyLong(), eq(question))).thenReturn(newProductQA);
         productQA = productQAUseCase.addProductQA(1L, question);
     }
@@ -49,7 +48,7 @@ public class ProductQASteps {
 
     @Given("a product with ID {long} has a QA with ID {long}")
     public void a_product_with_id_has_a_qa_with_id(Long productId, Long qaId) {
-        ProductQA existingProductQA = new ProductQA(new Product("Test Product"), "Test Question");
+        ProductQA existingProductQA = new ProductQA(productId, "Test Question");
         existingProductQA.setId(qaId);
         when(productQAUseCase.getProductQA(eq(productId), eq(qaId))).thenReturn(existingProductQA);
     }
@@ -68,8 +67,8 @@ public class ProductQASteps {
     @Given("a product with ID {long} has multiple QAs")
     public void a_product_with_id_has_multiple_qas(Long productId) {
         productQAs = Arrays.asList(
-                new ProductQA(new Product("Test Product"), "Question 1"),
-                new ProductQA(new Product("Test Product"), "Question 2"));
+                new ProductQA(productId, "Question 1"),
+                new ProductQA(productId, "Question 2"));
         when(productQAUseCase.getAllProductQAs(eq(productId))).thenReturn(productQAs);
     }
 
@@ -97,7 +96,7 @@ public class ProductQASteps {
 
     @Given("a product with ID {long} has an unanswered QA with ID {long}")
     public void a_product_with_id_has_an_unanswered_qa_with_id(Long productId, Long qaId) {
-        ProductQA unansweredProductQA = new ProductQA(new Product("Test Product"), "Unanswered Question");
+        ProductQA unansweredProductQA = new ProductQA(productId, "Unanswered Question");
         unansweredProductQA.setId(qaId);
         when(productQAUseCase.getProductQA(eq(productId), eq(qaId))).thenReturn(unansweredProductQA);
     }

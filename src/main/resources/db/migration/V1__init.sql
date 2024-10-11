@@ -20,11 +20,11 @@ ADD CONSTRAINT fk_product_category FOREIGN KEY (category_id) REFERENCES category
 CREATE TABLE product_qa (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     product_id BIGINT NOT NULL,
-    question TEXT NOT NULL,
-    answer TEXT,
+    question VARCHAR(255) NOT NULL,
+    answer VARCHAR(255),
+    created_at TIMESTAMP NOT NULL,
     answered_at TIMESTAMP,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (product_id) REFERENCES product (product_id)
+    FOREIGN KEY (product_id) REFERENCES product(product_id)
 );
 
 -- Category 테이블에 100개의 초기 데이터 삽입

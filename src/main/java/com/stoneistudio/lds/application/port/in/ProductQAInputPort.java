@@ -23,40 +23,44 @@ public class ProductQAInputPort implements ProductQAUseCase {
     @Override
     public ProductQA addProductQA(Long productId, String question) {
         var product = productOutputPort.findById(productId);
-        var productQA = product.addProductQA(question);
+        if (product == null) {
+            throw new IllegalArgumentException("제품을 찾을 수 없습니다.");
+        }
+        var productQA = new ProductQA(productId, question);
         return productQAOutputPort.save(productQA);
     }
 
     @Override
     public ProductQA getProductQA(Long productId, Long qaId) {
-        var product = productOutputPort.findById(productId);
-        return product.getProductQA(qaId);
+        var productQA = productQAOutputPort.findById(qaId);
+        if (productQA == null || !productQA.getProductId().equals(productId)) {
+            throw new IllegalArgumentException("해당 제품의 QA를 찾을 수 없습니다.");
+        }
+        return productQA;
     }
 
     @Override
     public List<ProductQA> getAllProductQAs(Long productId) {
-        var product = productOutputPort.findById(productId);
-        return product.getAllProductQAs();
+        return productQAOutputPort.findAllByProductId(productId);
     }
 
     @Override
     public void updateProductQA(Long productId, Long qaId, String newQuestion) {
-        var product = productOutputPort.findById(productId);
-        product.updateProductQA(qaId, newQuestion);
-        productOutputPort.save(product);
+        var productQA = getProductQA(productId, qaId);
+        productQA.setQuestion(newQuestion);
+        productQAOutputPort.save(productQA);
     }
 
     @Override
     public void answerProductQA(Long productId, Long qaId, String answer) {
-        var product = productOutputPort.findById(productId);
-        product.answerProductQA(qaId, answer);
-        productOutputPort.save(product);
+        var productQA = getProductQA(productId, qaId);
+        productQA.setAnswer(answer);
+        productQAOutputPort.save(productQA);
     }
 
     @Override
     public void deleteProductQA(Long productId, Long qaId) {
-        var product = productOutputPort.findById(productId);
-        product.deleteProductQA(qaId);
-        productOutputPort.save(product);
+        var productQA = getProductQA(productId, qaId);
+        productQAOutputPort.delete(productQA);
     }
 }
