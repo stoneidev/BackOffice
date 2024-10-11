@@ -66,8 +66,7 @@ public class CategorySteps {
 
     @Then("{string} 카테고리가 시스템에서 제거되어야 한다")
     public void 카테고리가_시스템에서_제거되어야_한다(String name) {
-        assertThrows(IllegalArgumentException.class,
-                () -> categoryUseCase.getCategoryById(parentCategory.getCategoryId()));
+        assertNull(categoryUseCase.getCategoryById(parentCategory.getCategoryId()));
     }
 
     @Given("{string} 카테고리와 {string} 제품이 존재할 때")

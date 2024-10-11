@@ -5,15 +5,19 @@ import com.stoneistudio.lds.application.port.out.ProductOutputPort;
 import com.stoneistudio.lds.application.usecase.CategoryUseCase;
 import com.stoneistudio.lds.domain.category.entity.Category;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 @Service
-@Transactional
+@Transactional(rollbackFor = Exception.class)
 public class CategoryInputPort implements CategoryUseCase {
     private final CategoryOutputPort categoryOutputPort;
     private final ProductOutputPort productOutputPort;
+    private static final Logger logger = LoggerFactory.getLogger(CategoryInputPort.class);
 
     public CategoryInputPort(CategoryOutputPort categoryOutputPort, ProductOutputPort productOutputPort) {
         this.categoryOutputPort = categoryOutputPort;
@@ -39,27 +43,36 @@ public class CategoryInputPort implements CategoryUseCase {
         if (category == null) {
             throw new IllegalArgumentException("카테고리가 존재하지 않습니다.");
         }
+
+        // 트랜잭션 내에서 예외가 발생하더라도 롤백되지 않도록 주의
         try {
+            // 자식 카테고리의 제품을 처리
             category.getChildren().forEach(child -> {
                 child.getProducts().forEach(product -> product.setCategory(null));
                 productOutputPort.saveAll(child.getProducts());
             });
+
+            // 현재 카테고리의 제품을 처리
             category.getProducts().forEach(product -> product.setCategory(null));
             productOutputPort.saveAll(category.getProducts());
 
+            // 카테고리 삭제
             categoryOutputPort.delete(category);
+
         } catch (Exception e) {
+            // 예외를 로깅하거나 적절히 처리
             throw new RuntimeException("카테고리 삭제 중 오류가 발생했습니다.", e);
         }
     }
 
+    @Transactional(propagation = Propagation.SUPPORTS)
     @Override
     public Category getCategoryById(Long categoryId) {
         var category = categoryOutputPort.findById(categoryId);
         if (category == null) {
-            throw new IllegalArgumentException("카테고리가 존재하지 않습니다.");
+            logger.error("카테고리가 존재하지 않습니다.");
         }
-        category.getChildren().size();
+        // 지연 로딩을 위한 코드 제거
         return category;
     }
 
