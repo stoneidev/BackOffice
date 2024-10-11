@@ -54,13 +54,13 @@ public class CategorySteps {
 
     @Then("{string} 카테고리의 하위 카테고리로 {string}이 추가되어야 한다")
     public void 카테고리의_하위_카테고리로_이_추가되어야_한다(String parentName, String childName) {
-        Category updatedParent = categoryUseCase.getCategoryById(parentCategory.getCategoryId());
+        var updatedParent = categoryUseCase.getCategoryById(parentCategory.getCategoryId());
         assertTrue(updatedParent.getChildren().stream().anyMatch(c -> c.getName().equals(childName)));
     }
 
     @When("{string} 카테고리를 삭제하면")
     public void 카테고리를_삭제하면(String name) {
-        Category category = categoryUseCase.getCategoryById(parentCategory.getCategoryId());
+        var category = categoryUseCase.getCategoryById(parentCategory.getCategoryId());
         categoryUseCase.deleteCategory(category.getCategoryId());
     }
 
@@ -84,11 +84,11 @@ public class CategorySteps {
 
     @Then("{string} 제품은 {string} 카테고리에 속해야 한다")
     public void 제품은_카테고리에_속해야_한다(String productName, String categoryName) {
-        Product updatedProduct = productUseCase.getProductById(product.getProductId());
+        var updatedProduct = productUseCase.getProductById(product.getProductId());
         assertEquals(parentCategory.getCategoryId(), updatedProduct.getCategory().getCategoryId());
     }
 
-    @Given("{string} 카테리에 속한 {string} 제품이 있을 때")
+    @Given("{string} 카테고리에 속한 {string} 제품이 있을 때")
     public void 카테고리에_속한_제품이_있을_때(String categoryName, String productName) {
         parentCategory = categoryUseCase.createCategory(categoryName, null);
         product = new Product(productName);
@@ -103,7 +103,7 @@ public class CategorySteps {
 
     @Then("{string} 제품은 어떤 카테고리에도 속하지 않아야 한다")
     public void 제품은_어떤_카테고리에도_속하지_않아야_한다(String productName) {
-        Product updatedProduct = (Product) productUseCase.findProductById(product.getProductId());
+        var updatedProduct = (Product) productUseCase.findProductById(product.getProductId());
         assertNull(updatedProduct.getCategory());
     }
 }

@@ -2,17 +2,15 @@ package com.stoneistudio.lds.domain.category.entity;
 
 import com.stoneistudio.lds.domain.product.entity.Product;
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "category")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 public class Category {
     @Id

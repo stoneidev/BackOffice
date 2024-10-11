@@ -23,9 +23,9 @@ public class CategoryInputPort implements CategoryUseCase {
 
     @Override
     public Category createCategory(String name, Long parentId) {
-        Category category = new Category(name);
+        var category = new Category(name);
         if (parentId != null) {
-            Category parent = categoryOutputPort.findById(parentId);
+            var parent = categoryOutputPort.findById(parentId);
             if (parent == null) {
                 throw new IllegalArgumentException("상위 카테고리가 존재하지 않습니다.");
             }
@@ -36,17 +36,15 @@ public class CategoryInputPort implements CategoryUseCase {
 
     @Override
     public void deleteCategory(Long categoryId) {
-        Category category = categoryOutputPort.findById(categoryId);
+        var category = categoryOutputPort.findById(categoryId);
         if (category == null) {
             throw new IllegalArgumentException("카테고리가 존재하지 않습니다.");
         }
         try {
-            // 자식 카테고리와 연관된 제품들의 카테고리를 null로 설정
             category.getChildren().forEach(child -> {
                 child.getProducts().forEach(product -> product.setCategory(null));
                 productOutputPort.saveAll(child.getProducts());
             });
-            // 현재 카테고리와 연관된 제품들의 카테고리를 null로 설정
             category.getProducts().forEach(product -> product.setCategory(null));
             productOutputPort.saveAll(category.getProducts());
 
@@ -58,11 +56,10 @@ public class CategoryInputPort implements CategoryUseCase {
 
     @Override
     public Category getCategoryById(Long categoryId) {
-        Category category = categoryOutputPort.findById(categoryId);
+        var category = categoryOutputPort.findById(categoryId);
         if (category == null) {
             throw new IllegalArgumentException("카테고리가 존재하지 않습니다.");
         }
-        // 자식 카테고리를 강제로 로드
         category.getChildren().size();
         return category;
     }
@@ -74,8 +71,8 @@ public class CategoryInputPort implements CategoryUseCase {
 
     @Override
     public void addProductToCategory(Long productId, Long categoryId) {
-        Product product = productOutputPort.findById(productId);
-        Category category = categoryOutputPort.findById(categoryId);
+        var product = productOutputPort.findById(productId);
+        var category = categoryOutputPort.findById(categoryId);
         if (product == null || category == null) {
             throw new IllegalArgumentException("제품 또는 카테고리가 존재하지 않습니다.");
         }
@@ -85,7 +82,7 @@ public class CategoryInputPort implements CategoryUseCase {
 
     @Override
     public void removeProductFromCategory(Long productId) {
-        Product product = productOutputPort.findById(productId);
+        var product = productOutputPort.findById(productId);
         if (product == null) {
             throw new IllegalArgumentException("제품이 존재하지 않습니다.");
         }
