@@ -1,15 +1,18 @@
-package com.stoneistudio.lds.framework.adapters.input.rest;
+package com.stoneistudio.lds.adapters;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stoneistudio.lds.application.usecase.ProductQAUseCase;
 import com.stoneistudio.lds.domain.product.entity.Product;
 import com.stoneistudio.lds.domain.productqa.entity.ProductQA;
+import com.stoneistudio.lds.framework.adapters.input.rest.ProductQAAdapter;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Arrays;
 import java.util.List;
@@ -19,17 +22,25 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(ProductQAAdapter.class)
 class ProductQAAdapterTest {
 
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
+    private ObjectMapper objectMapper;
+
+    @Mock
     private ProductQAUseCase productQAUseCase;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    private ProductQAAdapter productQAAdapter;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+        productQAAdapter = new ProductQAAdapter(productQAUseCase);
+        mockMvc = MockMvcBuilders.standaloneSetup(productQAAdapter).build();
+        objectMapper = new ObjectMapper();
+    }
 
     @Test
     void testAddProductQA() throws Exception {

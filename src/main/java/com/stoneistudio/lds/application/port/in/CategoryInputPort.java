@@ -43,24 +43,17 @@ public class CategoryInputPort implements CategoryUseCase {
         if (category == null) {
             throw new IllegalArgumentException("카테고리가 존재하지 않습니다.");
         }
-
-        // 트랜잭션 내에서 예외가 발생하더라도 롤백되지 않도록 주의
         try {
-            // 자식 카테고리의 제품을 처리
             category.getChildren().forEach(child -> {
                 child.getProducts().forEach(product -> product.setCategory(null));
                 productOutputPort.saveAll(child.getProducts());
             });
-
-            // 현재 카테고리의 제품을 처리
             category.getProducts().forEach(product -> product.setCategory(null));
             productOutputPort.saveAll(category.getProducts());
 
-            // 카테고리 삭제
             categoryOutputPort.delete(category);
-
         } catch (Exception e) {
-            // 예외를 로깅하거나 적절히 처리
+            logger.error("카테고리 삭제 중 오류가 발생했습니다.", e);
             throw new RuntimeException("카테고리 삭제 중 오류가 발생했습니다.", e);
         }
     }

@@ -2,6 +2,8 @@ package com.stoneistudio.lds.framework.adapters.input.rest;
 
 import com.stoneistudio.lds.application.usecase.ProductQAUseCase;
 import com.stoneistudio.lds.domain.productqa.entity.ProductQA;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,6 +14,7 @@ import java.util.List;
 public class ProductQAAdapter {
     private final ProductQAUseCase productQAUseCase;
 
+    @Autowired
     public ProductQAAdapter(ProductQAUseCase productQAUseCase) {
         this.productQAUseCase = productQAUseCase;
     }
@@ -35,13 +38,15 @@ public class ProductQAAdapter {
     }
 
     @PutMapping("/{qaId}")
-    public ResponseEntity<Void> updateProductQA(@PathVariable Long productId, @PathVariable Long qaId, @RequestBody String newQuestion) {
+    public ResponseEntity<Void> updateProductQA(@PathVariable Long productId, @PathVariable Long qaId,
+            @RequestBody String newQuestion) {
         productQAUseCase.updateProductQA(productId, qaId, newQuestion);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{qaId}/answer")
-    public ResponseEntity<Void> answerProductQA(@PathVariable Long productId, @PathVariable Long qaId, @RequestBody String answer) {
+    public ResponseEntity<Void> answerProductQA(@PathVariable Long productId, @PathVariable Long qaId,
+            @RequestBody String answer) {
         productQAUseCase.answerProductQA(productId, qaId, answer);
         return ResponseEntity.ok().build();
     }

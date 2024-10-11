@@ -23,7 +23,6 @@ public class ProductQASteps {
 
     private ProductQA productQA;
     private List<ProductQA> productQAs;
-    private Exception thrownException;
 
     @Before
     public void setup() {
@@ -69,9 +68,8 @@ public class ProductQASteps {
     @Given("a product with ID {long} has multiple QAs")
     public void a_product_with_id_has_multiple_qas(Long productId) {
         productQAs = Arrays.asList(
-            new ProductQA(new Product("Test Product"), "Question 1"),
-            new ProductQA(new Product("Test Product"), "Question 2")
-        );
+                new ProductQA(new Product("Test Product"), "Question 1"),
+                new ProductQA(new Product("Test Product"), "Question 2"));
         when(productQAUseCase.getAllProductQAs(eq(productId))).thenReturn(productQAs);
     }
 

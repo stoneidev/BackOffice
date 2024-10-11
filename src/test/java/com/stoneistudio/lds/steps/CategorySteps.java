@@ -84,6 +84,7 @@ public class CategorySteps {
     @Then("{string} 제품은 {string} 카테고리에 속해야 한다")
     public void 제품은_카테고리에_속해야_한다(String productName, String categoryName) {
         var updatedProduct = productUseCase.getProductById(product.getProductId());
+        assertNotNull(updatedProduct.getCategory());
         assertEquals(parentCategory.getCategoryId(), updatedProduct.getCategory().getCategoryId());
     }
 
