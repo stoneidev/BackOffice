@@ -39,18 +39,20 @@ public class ProductInputPort implements ProductUseCase {
     @Override
     public void updateProduct(Product product) {
         Product existingProduct = productOutputPort.findById(product.getProductId());
-        if (existingProduct != null) {
-            existingProduct.setProductName(product.getProductName());
-            productOutputPort.save(existingProduct);
+        if (existingProduct == null) {
+            throw new IllegalArgumentException("업데이트할 제품이 존재하지 않습니다.");
         }
+        existingProduct.setProductName(product.getProductName());
+        productOutputPort.save(existingProduct);
     }
 
     @Override
     public void deleteProduct(Long productId) {
         Product existingProduct = productOutputPort.findById(productId);
-        if (existingProduct != null) {
-            productOutputPort.delete(existingProduct);
+        if (existingProduct == null) {
+            throw new IllegalArgumentException("삭제할 제품이 존재하지 않습니다.");
         }
+        productOutputPort.delete(existingProduct);
     }
 
     @Override
