@@ -24,6 +24,7 @@ public class ProductSteps {
     private Product product;
     private List<Product> productList;
     private Long productId;
+    private Exception lastException; // lastException 변수 선언
 
     @After
     public void tearDown() {
