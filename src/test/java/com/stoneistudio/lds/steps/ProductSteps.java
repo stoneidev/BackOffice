@@ -24,7 +24,6 @@ public class ProductSteps {
     private Product product;
     private List<Product> productList;
     private Long productId;
-    private Exception lastException;
 
     @Given("a product with name {string}")
     public void a_product_with_name(String name) {
