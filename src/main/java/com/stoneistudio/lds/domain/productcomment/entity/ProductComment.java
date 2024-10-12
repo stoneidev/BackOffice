@@ -1,18 +1,17 @@
 package com.stoneistudio.lds.domain.productcomment.entity;
 
+import com.stoneistudio.lds.domain.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "product_comment")
 @Getter
 @Setter
 @NoArgsConstructor
-public class ProductComment {
+public class ProductComment extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,13 +25,9 @@ public class ProductComment {
     @Column(nullable = false)
     private String author;
 
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
-
     public ProductComment(Long productId, String content, String author) {
         this.productId = productId;
         this.content = content;
         this.author = author;
-        this.createdAt = LocalDateTime.now();
     }
 }

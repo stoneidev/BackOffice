@@ -1,16 +1,17 @@
 package com.stoneistudio.lds.domain.product.entity;
 
+import com.stoneistudio.lds.domain.common.BaseEntity;
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "product")
-@Data
 @Getter
+@Setter
 @NoArgsConstructor
-public class Product {
+public class Product extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "product_id")
@@ -29,9 +30,5 @@ public class Product {
     public Product(String name, Long categoryId) {
         this.name = name;
         this.categoryId = categoryId;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 }

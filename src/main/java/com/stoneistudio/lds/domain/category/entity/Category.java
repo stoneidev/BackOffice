@@ -1,8 +1,10 @@
 package com.stoneistudio.lds.domain.category.entity;
 
+import com.stoneistudio.lds.domain.common.BaseEntity;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -11,9 +13,10 @@ import java.util.List;
 
 @Entity
 @Table(name = "category")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
-public class Category {
+public class Category extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "category_id")
@@ -33,7 +36,6 @@ public class Category {
 
     @Column(name = "depth")
     private Integer depth;
-
 
     public Category(String name) {
         this.name = name;

@@ -9,6 +9,7 @@ import io.cucumber.spring.CucumberContextConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -40,6 +41,7 @@ public class ProductSteps {
 
     @When("I add the product")
     public void i_add_the_product() {
+        product.setCreatedAt(LocalDateTime.now()); // 이 줄을 추가
         productUseCase.addProduct(product);
     }
 

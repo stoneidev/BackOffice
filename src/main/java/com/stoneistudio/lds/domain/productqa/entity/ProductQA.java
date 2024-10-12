@@ -1,5 +1,6 @@
 package com.stoneistudio.lds.domain.productqa.entity;
 
+import com.stoneistudio.lds.domain.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ProductQA {
+public class ProductQA extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,16 +27,12 @@ public class ProductQA {
     @Column
     private String answer;
 
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
-
     @Column
     private LocalDateTime answeredAt;
 
     public ProductQA(Long productId, String question) {
         this.productId = productId;
         this.question = question;
-        this.createdAt = LocalDateTime.now();
     }
 
     public void setAnswer(String answer) {
