@@ -18,10 +18,14 @@ public class JpaProductAdapter implements ProductOutputPort {
 
     @Override
     public List<Product> findAllByCategoryId(Long categoryId) {
-        return entityManager.createQuery(
-                "SELECT p FROM Product p WHERE p.categoryId = :categoryId", Product.class)
-                .setParameter("categoryId", categoryId)
-                .getResultList();
+        if (categoryId == null) {
+            return entityManager.createQuery("SELECT p FROM Product p WHERE p.categoryId IS NULL", Product.class)
+                    .getResultList();
+        } else {
+            return entityManager.createQuery("SELECT p FROM Product p WHERE p.categoryId = :categoryId", Product.class)
+                    .setParameter("categoryId", categoryId)
+                    .getResultList();
+        }
     }
 
     @Override
@@ -56,5 +60,13 @@ public class JpaProductAdapter implements ProductOutputPort {
         for (Product product : products) {
             save(product);
         }
+    }
+
+    @Override
+    public List<Product> findByCategoryId(Long categoryId) {
+        return entityManager.createQuery(
+                "SELECT p FROM Product p WHERE p.categoryId = :categoryId", Product.class)
+                .setParameter("categoryId", categoryId)
+                .getResultList();
     }
 }

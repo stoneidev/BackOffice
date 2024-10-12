@@ -1,72 +1,109 @@
 @startuml
 
-package "Domain" {
-  class Product {
-    -Long productId
-    -ProductName productName
-  }
-  
-  class ProductName {
-    -String name
-  }
+' Abstract base class
+abstract class BaseEntity {
+  - createdAt: LocalDateTime
+  - updatedAt: LocalDateTime
+  - createdBy: String
+  - updatedBy: String
 }
 
-package "Application" {
-  interface ProductUseCase {
-    +void addProduct(Product product)
-    +List<Product> getAllProducts()
-    +Product getProductById(Long productId)
-    +void updateProduct(Product product)
-    +void deleteProduct(Long id)
-    +Object findProductById(long l)
-  }
-  
-  class ProductInputPort {
-    -ProductOutputPort productOutputPort
-  }
-  
-  interface ProductOutputPort {
-    +void save(Product product)
-    +List<Product> findAll()
-    +Product findById(Long productId)
-    +void delete(Product existingProduct)
-  }
+' Product entity
+class Product {
+  - productId: Long
+  - name: String
+  - categoryId: Long
+  + Product(name: String)
+  + Product(name: String, categoryId: Long)
 }
 
-package "Infrastructure" {
-  class JpaProductAdapter {
-    -EntityManager entityManager
-  }
-  
-  class InMemoryProductAdapter {
-    -List<Product> products
-    -AtomicLong idGenerator
-  }
-  
-  class SwaggerConfig {
-    +OpenAPI openAPI()
-  }
-  
-  class DatabaseConfig {
-  }
+' ProductQA entity
+class ProductQA {
+  - id: Long
+  - productId: Long
+  - question: String
+  - answer: String
+  - answeredAt: LocalDateTime
+  + ProductQA(productId: Long, question: String)
+  + setAnswer(answer: String)
 }
 
-package "Framework" {
-  class ProductAdapter {
-    -ProductUseCase productUseCase
-  }
-  
-  class DemoApplication {
-  }
+' ProductComment entity
+class ProductComment {
+  - id: Long
+  - productId: Long
+  - content: String
+  - author: String
+  + ProductComment(productId: Long, content: String, author: String)
 }
 
-Product "1" *-- "1" ProductName
+' Category entity
+class Category {
+  - categoryId: Long
+  - name: String
+  - parent: Category
+  - children: List<Category>
+  - depth: Integer
+  + Category(name: String)
+  + addChild(child: Category)
+  + removeChild(child: Category)
+}
 
-ProductUseCase <|.. ProductInputPort
-ProductOutputPort <|.. JpaProductAdapter
-ProductOutputPort <|.. InMemoryProductAdapter
-ProductUseCase <-- ProductAdapter
+' DemoApplication
+class DemoApplication {
+  + main(args: String[]): void
+}
 
-ProductInputPort --> ProductOutputPort
+' AuditConfig
+class AuditConfig {
+  + auditorProvider(): AuditorAware<String>
+}
+
+' CucumberTest
+class CucumberTest {
+}
+
+' ProductSteps
+class ProductSteps {
+  - productUseCase: ProductUseCase
+  - product: Product
+  - productList: List<Product>
+  - productId: Long
+  - lastException: Exception
+  + tearDown(): void
+  + a_product_with_name(name: String): void
+  + i_add_the_product(): void
+  + the_product_should_be_saved_successfully(): void
+  + there_are_existing_products_in_the_system(): void
+  + i_request_all_products(): void
+  + i_should_receive_a_list_of_all_products(): void
+  + a_product_with_id_exists_in_the_system(id: Long): void
+  + i_request_the_product_with_id(id: Long): void
+  + i_request_the_product_with_id_not_exist(): void
+  + i_should_receive_the_correct_product_details(): void
+  + i_should_receive_no_product(): void
+  + i_update_the_product_name_to(newName: String): void
+  + the_product_should_be_updated_successfully(): void
+  + a_product_with_id_does_not_exist_in_the_system(id: Long): void
+  + i_try_to_update_the_non_existent_product(): void
+  + no_update_should_occur(): void
+  + i_delete_the_product_with_id(id: Long): void
+  + itShouldBeDeletedSuccessfully(): void
+  + the_product_should_be_removed_from_the_system(): void
+  + i_try_to_delete_the_non_existent_product(): void
+  + no_deletion_should_occur(): void
+  + the_product_with_id_should_not_exist_in_the_system(id: Long): void
+  + 카테고리_id가_인_카테고리가_존재합니다(categoryId: Long): void
+  + 해당_카테고리에_과_가_속해_있습니다(product1: String, product2: String): void
+  + 카테고리_id로_제품을_조회합니다(categoryId: Long): void
+  + 조회된_제품_목록에는_과_가_포함되어_있어야_합니다(product1: String, product2: String): void
+}
+
+' Relationships
+BaseEntity <|-- Product
+BaseEntity <|-- ProductQA
+BaseEntity <|-- ProductComment
+BaseEntity <|-- Category
+Category "1" *-- "0..*" Category : contains
 
 @enduml

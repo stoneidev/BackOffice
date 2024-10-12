@@ -1,0 +1,133 @@
+@startuml
+
+package "Domain" {
+    abstract class BaseEntity
+    class Product
+    class ProductQA
+    class ProductComment
+    class Category
+}
+
+package "Application" {
+    interface ProductUseCase {
+        +addProduct(Product product)
+        +getAllProducts(): List<Product>
+        +getProductById(Long productId): Product
+        +updateProduct(Product product)
+        +deleteProduct(Long id)
+        +getProductsByCategory(Long categoryId): List<Product>
+    }
+
+    interface CategoryUseCase {
+        +createCategory(String name, Long parentId): Category
+        +deleteCategory(Long categoryId)
+        +getCategoryById(Long categoryId): Category
+        +getAllCategories(): List<Category>
+        +addProductToCategory(Long productId, Long categoryId)
+        +removeProductFromCategory(Long productId)
+    }
+
+    interface ProductCommentUseCase {
+        +addProductComment(Long productId, String content, String author): ProductComment
+        +getProductComment(Long commentId): ProductComment
+        +getAllProductComments(Long productId): List<ProductComment>
+        +updateProductComment(Long commentId, String content)
+        +deleteProductComment(Long commentId)
+    }
+
+    interface ProductQAUseCase {
+        +addProductQA(Long productId, String question): ProductQA
+        +getProductQA(Long productId, Long qaId): ProductQA
+        +getAllProductQAs(Long productId): List<ProductQA>
+        +updateProductQA(Long productId, Long qaId, String newQuestion)
+        +answerProductQA(Long productId, Long qaId, String answer)
+        +deleteProductQA(Long productId, Long qaId)
+    }
+
+    class ProductInputPort {
+        -ProductOutputPort productOutputPort
+    }
+
+    class CategoryInputPort {
+        -CategoryOutputPort categoryOutputPort
+    }
+
+    class ProductCommentInputPort {
+        -ProductCommentOutputPort productCommentOutputPort
+    }
+
+    class ProductQAInputPort {
+        -ProductQAOutputPort productQAOutputPort
+    }
+}
+
+package "Infrastructure" {
+    interface ProductOutputPort {
+        +save(Product product)
+        +findAll(): List<Product>
+        +findById(Long productId): Product
+        +delete(Product product)
+        +findAllByCategoryId(Long categoryId): List<Product>
+    }
+
+    interface CategoryOutputPort {
+        +save(Category category): Category
+        +delete(Category category)
+        +findById(Long categoryId): Category
+        +findAll(): List<Category>
+    }
+
+    interface ProductCommentOutputPort {
+        +save(ProductComment productComment): ProductComment
+        +findById(Long commentId): ProductComment
+        +findAllByProductId(Long productId): List<ProductComment>
+        +delete(ProductComment productComment)
+    }
+
+    interface ProductQAOutputPort {
+        +save(ProductQA productQA): ProductQA
+        +findById(Long qaId): ProductQA
+        +findAllByProductId(Long productId): List<ProductQA>
+        +delete(ProductQA productQA)
+    }
+
+    class JpaProductAdapter
+    class JpaCategoryAdapter
+    class JpaProductCommentAdapter
+    class JpaProductQAAdapter
+}
+
+package "Framework" {
+    class ProductAdapter
+    class CategoryAdapter
+    class ProductCommentAdapter
+    class ProductQAAdapter
+}
+
+' Relationships
+BaseEntity <|-- Product
+BaseEntity <|-- ProductQA
+BaseEntity <|-- ProductComment
+BaseEntity <|-- Category
+
+ProductUseCase <|.. ProductInputPort
+CategoryUseCase <|.. CategoryInputPort
+ProductCommentUseCase <|.. ProductCommentInputPort
+ProductQAUseCase <|.. ProductQAInputPort
+
+ProductOutputPort <|.. JpaProductAdapter
+CategoryOutputPort <|.. JpaCategoryAdapter
+ProductCommentOutputPort <|.. JpaProductCommentAdapter
+ProductQAOutputPort <|.. JpaProductQAAdapter
+
+ProductAdapter --> ProductUseCase
+CategoryAdapter --> CategoryUseCase
+ProductCommentAdapter --> ProductCommentUseCase
+ProductQAAdapter --> ProductQAUseCase
+
+ProductInputPort --> ProductOutputPort
+CategoryInputPort --> CategoryOutputPort
+ProductCommentInputPort --> ProductCommentOutputPort
+ProductQAInputPort --> ProductQAOutputPort
+
+@enduml

@@ -16,4 +16,6 @@ public interface ProductOutputPort {
     void saveAll(List<Product> products);
 
     List<Product> findAllByCategoryId(Long categoryId);
+
+    List<Product> findByCategoryId(Long categoryId);
 }

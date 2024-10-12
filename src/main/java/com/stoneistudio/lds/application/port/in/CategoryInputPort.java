@@ -44,6 +44,13 @@ public class CategoryInputPort implements CategoryUseCase {
             throw new IllegalArgumentException("카테고리가 존재하지 않습니다.");
         }
         try {
+            // 해당 카테고리 ID를 가진 모든 제품의 categoryId를 삭제
+            var products = productOutputPort.findByCategoryId(categoryId);
+            for (var product : products) {
+                product.removeCategoryId();
+                productOutputPort.save(product);
+            }
+
             categoryOutputPort.delete(category);
         } catch (Exception e) {
             logger.error("카테고리 삭제 중 오류가 발생했습니다.", e);
@@ -55,10 +62,6 @@ public class CategoryInputPort implements CategoryUseCase {
     @Override
     public Category getCategoryById(Long categoryId) {
         var category = categoryOutputPort.findById(categoryId);
-        if (category == null) {
-            logger.error("카테고리가 존재하지 않습니다.");
-        }
-        // 지연 로딩을 위한 코드 제거
         return category;
     }
 
