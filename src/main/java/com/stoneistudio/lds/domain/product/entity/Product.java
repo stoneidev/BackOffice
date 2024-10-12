@@ -35,4 +35,8 @@ public class Product extends BaseEntity {
     public void removeCategoryId() {
         this.categoryId = null;
     }
+
+    public void changeCategoryId(Long newCategoryId) {
+        this.categoryId = newCategoryId;
+    }
 }

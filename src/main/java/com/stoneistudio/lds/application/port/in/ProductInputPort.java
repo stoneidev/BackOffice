@@ -62,4 +62,14 @@ public class ProductInputPort implements ProductUseCase {
     public List<Product> getProductsByCategory(Long categoryId) {
         return productOutputPort.findAllByCategoryId(categoryId);
     }
+
+    @Override
+    public void changeProductCategory(Long productId, Long newCategoryId) {
+        Product existingProduct = productOutputPort.findById(productId);
+        if (existingProduct == null) {
+            throw new IllegalArgumentException("카테고리를 변경할 제품이 존재하지 않습니다.");
+        }
+        existingProduct.changeCategoryId(newCategoryId);
+        productOutputPort.save(existingProduct);
+    }
 }

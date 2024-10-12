@@ -25,7 +25,6 @@ public class CategorySteps {
 
     private String categoryName;
     private Category createdCategory;
-    private Category parentCategory;
     private Product product;
     private List<Product> productsInCategory;
 
@@ -52,7 +51,7 @@ public class CategorySteps {
 
     @When("{string}이라는 하위 카테고리를 생성하면")
     public void 이라는_하위_카테고리를_생성하면(String subCategoryName) {
-        Category subCategory = categoryUseCase.createCategory(subCategoryName, createdCategory.getCategoryId());
+        categoryUseCase.createCategory(subCategoryName, createdCategory.getCategoryId());
         createdCategory = categoryUseCase.getCategoryById(createdCategory.getCategoryId());
     }
 
@@ -125,7 +124,8 @@ public class CategorySteps {
     public void 해당_카테고리에_속했던_모든_제품의_카테고리_ID가_null이_되어야_한다() {
         for (Product product : productsInCategory) {
             Product updatedProduct = productUseCase.getProductById(product.getProductId());
-            assertNull(updatedProduct.getCategoryId(), "Product " + updatedProduct.getName() + " should have null categoryId");
+            assertNull(updatedProduct.getCategoryId(),
+                    "Product " + updatedProduct.getName() + " should have null categoryId");
         }
     }
 }

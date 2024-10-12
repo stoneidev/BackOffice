@@ -18,4 +18,6 @@ public interface ProductUseCase {
     Object findProductById(long l);
 
     List<Product> getProductsByCategory(Long categoryId);
+
+    void changeProductCategory(Long productId, Long newCategoryId);
 }

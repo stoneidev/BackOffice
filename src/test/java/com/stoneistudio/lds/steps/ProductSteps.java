@@ -1,6 +1,8 @@
 package com.stoneistudio.lds.steps;
 
+import com.stoneistudio.lds.application.usecase.CategoryUseCase;
 import com.stoneistudio.lds.application.usecase.ProductUseCase;
+import com.stoneistudio.lds.domain.category.entity.Category;
 import com.stoneistudio.lds.domain.product.entity.Product;
 
 import io.cucumber.java.After;
@@ -21,10 +23,15 @@ public class ProductSteps {
     @Autowired
     private ProductUseCase productUseCase;
 
+    @Autowired
+    private CategoryUseCase categoryUseCase;
+
     private Product product;
     private List<Product> productList;
     private Long productId;
     private Exception lastException;
+    private Category category1;
+    private Category category2;
 
     @After
     public void tearDown() {
@@ -32,6 +39,8 @@ public class ProductSteps {
         productList = null;
         productId = null;
         lastException = null;
+        category1 = null;
+        category2 = null;
     }
 
     @Given("a product with name {string}")
@@ -202,5 +211,28 @@ public class ProductSteps {
         assertEquals(2, productList.size());
         assertTrue(productList.stream().anyMatch(p -> p.getName().equals(product1)));
         assertTrue(productList.stream().anyMatch(p -> p.getName().equals(product2)));
+    }
+
+    @Given("{string} 카테고리와 {string} 카테고리가 존재합니다")
+    public void 카테고리들이_존재합니다(String category1Name, String category2Name) {
+        category1 = categoryUseCase.createCategory(category1Name, null);
+        category2 = categoryUseCase.createCategory(category2Name, null);
+    }
+
+    @Given("{string} 제품이 {string} 카테고리에 속해 있습니다")
+    public void 제품이_카테고리에_속해_있습니다(String productName, String categoryName) {
+        product = new Product(productName, category1.getCategoryId());
+        productUseCase.addProduct(product);
+    }
+
+    @When("{string} 제품의 카테고리를 {string}로 변경합니다")
+    public void 제품의_카테고리를_변경합니다(String productName, String newCategoryName) {
+        productUseCase.changeProductCategory(product.getProductId(), category2.getCategoryId());
+    }
+
+    @Then("{string} 제품은 {string} 카테고리에 속해야 합니다")
+    public void 제품은_카테고리에_속해야_합니다(String productName, String categoryName) {
+        Product updatedProduct = productUseCase.getProductById(product.getProductId());
+        assertEquals(category2.getCategoryId(), updatedProduct.getCategoryId());
     }
 }
