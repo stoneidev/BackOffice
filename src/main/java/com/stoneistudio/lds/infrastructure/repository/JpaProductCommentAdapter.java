@@ -15,7 +15,7 @@ public class JpaProductCommentAdapter implements ProductCommentOutputPort {
 
     @Override
     public ProductComment save(ProductComment productComment) {
-        if (productComment.getId() == null) {
+        if (productComment.getCommentId() == null) {
             entityManager.persist(productComment);
         } else {
             productComment = entityManager.merge(productComment);
@@ -30,7 +30,8 @@ public class JpaProductCommentAdapter implements ProductCommentOutputPort {
 
     @Override
     public List<ProductComment> findAllByProductId(Long productId) {
-        return entityManager.createQuery("SELECT pc FROM ProductComment pc WHERE pc.productId = :productId", ProductComment.class)
+        return entityManager
+                .createQuery("SELECT pc FROM ProductComment pc WHERE pc.productId = :productId", ProductComment.class)
                 .setParameter("productId", productId)
                 .getResultList();
     }

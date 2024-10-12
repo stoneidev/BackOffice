@@ -49,7 +49,7 @@ public class ProductQASteps {
     @Given("ID가 {long}인 제품에 ID가 {long}인 QA가 있습니다")
     public void a_product_with_id_has_a_qa_with_id(Long productId, Long qaId) {
         ProductQA existingProductQA = new ProductQA(productId, "Test Question");
-        existingProductQA.setId(qaId);
+        existingProductQA.setQaId(qaId);
         when(productQAUseCase.getProductQA(eq(productId), eq(qaId))).thenReturn(existingProductQA);
     }
 
@@ -61,7 +61,7 @@ public class ProductQASteps {
     @Then("정확한 QA 정보를 받아야 합니다")
     public void i_should_receive_the_correct_qa_details() {
         assertNotNull(productQA);
-        assertEquals(1L, productQA.getId());
+        assertEquals(1L, productQA.getQaId());
     }
 
     @Given("ID가 {long}인 제품에 여러 개의 QA가 있습니다")
@@ -97,7 +97,7 @@ public class ProductQASteps {
     @Given("ID가 {long}인 제품에 ID가 {long}인 답변되지 않은 QA가 있습니다")
     public void a_product_with_id_has_an_unanswered_qa_with_id(Long productId, Long qaId) {
         ProductQA unansweredProductQA = new ProductQA(productId, "Unanswered Question");
-        unansweredProductQA.setId(qaId);
+        unansweredProductQA.setQaId(qaId);
         when(productQAUseCase.getProductQA(eq(productId), eq(qaId))).thenReturn(unansweredProductQA);
     }
 

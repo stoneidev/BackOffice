@@ -14,7 +14,7 @@ import lombok.Setter;
 public class ProductComment extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long commentId;
 
     @Column(name = "product_id", nullable = false)
     private Long productId;

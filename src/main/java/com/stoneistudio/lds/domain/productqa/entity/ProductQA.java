@@ -6,8 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-
 @Entity
 @Table(name = "product_qa")
 @Getter
@@ -16,7 +14,7 @@ import java.time.LocalDateTime;
 public class ProductQA extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long qaId;
 
     @Column(name = "product_id", nullable = false)
     private Long productId;
@@ -27,9 +25,6 @@ public class ProductQA extends BaseEntity {
     @Column
     private String answer;
 
-    @Column
-    private LocalDateTime answeredAt;
-
     public ProductQA(Long productId, String question) {
         this.productId = productId;
         this.question = question;
@@ -37,6 +32,5 @@ public class ProductQA extends BaseEntity {
 
     public void setAnswer(String answer) {
         this.answer = answer;
-        this.answeredAt = LocalDateTime.now();
     }
 }

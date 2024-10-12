@@ -15,7 +15,7 @@ public class JpaProductQAAdapter implements ProductQAOutputPort {
 
     @Override
     public ProductQA save(ProductQA productQA) {
-        if (productQA.getId() == null) {
+        if (productQA.getQaId() == null) {
             entityManager.persist(productQA);
         } else {
             productQA = entityManager.merge(productQA);

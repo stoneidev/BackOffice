@@ -50,10 +50,10 @@ public class ProductQuerySteps {
         productCommentUseCase.addProductComment(productId, "댓글 2", "jngkim");
 
         ProductQA qa1 = productQAUseCase.addProductQA(productId, "질문 1");
-        productQAUseCase.answerProductQA(productId, qa1.getId(), "답변 1");
+        productQAUseCase.answerProductQA(productId, qa1.getQaId(), "답변 1");
 
         ProductQA qa2 = productQAUseCase.addProductQA(productId, "질문 2");
-        productQAUseCase.answerProductQA(productId, qa2.getId(), "답변 2");
+        productQAUseCase.answerProductQA(productId, qa2.getQaId(), "답변 2");
     }
 
     @When("제품 ID {long}로 상세 정보를 조회합니다")
