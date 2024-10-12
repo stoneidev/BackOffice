@@ -43,47 +43,47 @@ public class ProductSteps {
         category2 = null;
     }
 
-    @Given("a product with name {string}")
+    @Given("이름이 {string}인 제품이 있습니다")
     public void a_product_with_name(String name) {
         product = new Product(name);
     }
 
-    @When("I add the product")
+    @When("제품을 추가합니다")
     public void i_add_the_product() {
-        product.setCreatedAt(LocalDateTime.now()); // 이 줄을 추가
+        product.setCreatedAt(LocalDateTime.now());
         productUseCase.addProduct(product);
     }
 
-    @Then("the product should be saved successfully")
+    @Then("제품이 성공적으로 저장되어야 합니다")
     public void the_product_should_be_saved_successfully() {
         assertNotNull(product.getProductId());
     }
 
-    @Given("there are existing products in the system")
+    @Given("시스템에 기존 제품들이 존재합니다")
     public void there_are_existing_products_in_the_system() {
         productUseCase.addProduct(new Product("Existing Product 1"));
         productUseCase.addProduct(new Product("Existing Product 2"));
     }
 
-    @When("I request all products")
+    @When("모든 제품을 요청합니다")
     public void i_request_all_products() {
         productList = productUseCase.getAllProducts();
     }
 
-    @Then("I should receive a list of all products")
+    @Then("모든 제품 목록을 받아야 합니다")
     public void i_should_receive_a_list_of_all_products() {
         assertFalse(productList.isEmpty());
         assertTrue(productList.size() >= 2);
     }
 
-    @Given("a product with ID {long} exists in the system")
+    @Given("ID가 {long}인 제품이 시스템에 존재합니다")
     public void a_product_with_id_exists_in_the_system(Long id) {
         product = new Product("Test Product");
         productUseCase.addProduct(product);
         productId = product.getProductId();
     }
 
-    @When("I request the product with ID {long}")
+    @When("ID가 {long}인 제품을 요청합니다")
     public void i_request_the_product_with_id(Long id) {
         try {
             product = productUseCase.getProductById(productId);
@@ -92,7 +92,7 @@ public class ProductSteps {
         }
     }
 
-    @When("I request the product with ID not exist")
+    @When("존재하지 않는 ID로 제품을 요청합니다")
     public void i_request_the_product_with_id_not_exist() {
         try {
             product = productUseCase.getProductById(999L);
@@ -101,18 +101,18 @@ public class ProductSteps {
         }
     }
 
-    @Then("I should receive the correct product details")
+    @Then("정확한 제품 정보를 받아야 합니다")
     public void i_should_receive_the_correct_product_details() {
         assertNotNull(product);
         assertEquals(productId, product.getProductId());
     }
 
-    @Then("I should receive no product")
+    @Then("제품을 받을 수 없어야 합니다")
     public void i_should_receive_no_product() {
         assertNull(product);
     }
 
-    @When("I update the product name to {string}")
+    @When("제품 이름을 {string}로 업데이트합니다")
     public void i_update_the_product_name_to(String newName) {
         product.setName(newName);
         try {
@@ -122,20 +122,20 @@ public class ProductSteps {
         }
     }
 
-    @Then("the product should be updated successfully")
+    @Then("제품이 성공적으로 업데이트되어야 합니다")
     public void the_product_should_be_updated_successfully() {
         Product updatedProduct = productUseCase.getProductById(productId);
         assertEquals("Updated Product", updatedProduct.getName());
     }
 
-    @Given("a product with ID {long} does not exist in the system")
+    @Given("ID가 {long}인 제품이 시스템에 존재하지 않습니다")
     public void a_product_with_id_does_not_exist_in_the_system(Long id) {
         productId = id;
         product = new Product("Non-existent Product");
         product.setProductId(productId);
     }
 
-    @When("I try to update the non-existent product")
+    @When("존재하지 않는 제품을 업데이트하려고 시도합니다")
     public void i_try_to_update_the_non_existent_product() {
         try {
             productUseCase.updateProduct(product);
@@ -144,13 +144,13 @@ public class ProductSteps {
         }
     }
 
-    @Then("no update should occur")
+    @Then("업데이트가 발생하지 않아야 합니다")
     public void no_update_should_occur() {
         assertNotNull(lastException);
         assertTrue(lastException instanceof IllegalArgumentException);
     }
 
-    @When("I delete the product with ID {long}")
+    @When("ID가 {long}인 제품을 삭제합니다")
     public void i_delete_the_product_with_id(Long id) {
         try {
             productUseCase.deleteProduct(productId);
@@ -159,17 +159,17 @@ public class ProductSteps {
         }
     }
 
-    @Then("it should be deleted successfully")
+    @Then("성공적으로 삭제되어야 합니다")
     public void itShouldBeDeletedSuccessfully() {
         assertThrows(IllegalArgumentException.class, () -> productUseCase.getProductById(productId));
     }
 
-    @Then("the product should be removed from the system")
+    @Then("제품이 시스템에서 제거되어야 합니다")
     public void the_product_should_be_removed_from_the_system() {
         assertNull(productUseCase.getProductById(productId));
     }
 
-    @When("I try to delete the non-existent product")
+    @When("존재하지 않는 제품을 삭제하려고 시도합니다")
     public void i_try_to_delete_the_non_existent_product() {
         try {
             productUseCase.deleteProduct(999999L);
@@ -178,13 +178,13 @@ public class ProductSteps {
         }
     }
 
-    @Then("no deletion should occur")
+    @Then("삭제가 발생하지 않아야 합니다")
     public void no_deletion_should_occur() {
         assertNotNull(lastException);
         assertTrue(lastException instanceof IllegalArgumentException);
     }
 
-    @Then("the product with ID {long} should not exist in the system")
+    @Then("ID가 {long}인 제품이 시스템에 존재하지 않아야 합니다")
     public void the_product_with_id_should_not_exist_in_the_system(Long id) {
         assertThrows(IllegalArgumentException.class, () -> productUseCase.getProductById(id));
     }
