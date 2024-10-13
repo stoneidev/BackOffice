@@ -1,4 +1,4 @@
-package com.stoneistudio.lds.member.infrastructure.repository;
+package com.stoneistudio.lds.member.framework.adapters.output;
 
 import com.stoneistudio.lds.member.application.port.out.MemberOutputPort;
 import com.stoneistudio.lds.member.domain.member.entity.Member;

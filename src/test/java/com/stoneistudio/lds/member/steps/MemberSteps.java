@@ -5,7 +5,6 @@ import com.stoneistudio.lds.member.domain.member.entity.Member;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import io.cucumber.spring.CucumberContextConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -20,7 +19,6 @@ public class MemberSteps {
     private Member member;
     private List<Member> members;
     private Long memberId;
-    private Exception lastException;
 
     @Given("{string}이라는 이름과 {string}이라는 이메일을 가진 회원이 있습니다")
     public void a_member_with_name_and_email(String name, String email) {

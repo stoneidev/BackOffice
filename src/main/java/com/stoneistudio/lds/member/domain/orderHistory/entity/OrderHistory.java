@@ -14,6 +14,13 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 public class OrderHistory extends BaseEntity {
+    public OrderHistory(Long memberId, Long orderId, String orderStatus) {
+        this.memberId = memberId;
+        this.orderId = orderId;
+        this.orderStatus = orderStatus;
+        this.orderDate = LocalDateTime.now();
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long orderHistoryId;
@@ -22,13 +29,10 @@ public class OrderHistory extends BaseEntity {
     private Long memberId;
 
     @Column(nullable = false)
-    private Long productId;
+    private Long orderId;
 
     @Column(nullable = false)
-    private Integer quantity;
-
-    @Column(nullable = false)
-    private Long totalPrice;
+    private String orderStatus;
 
     @Column(nullable = false)
     private LocalDateTime orderDate;

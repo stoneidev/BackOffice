@@ -11,18 +11,4 @@ CREATE TABLE member (
     updated_by VARCHAR(255) NOT NULL
 );
 
--- OrderHistory 테이블 생성
-CREATE TABLE order_history (
-    order_history_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    member_id BIGINT NOT NULL,
-    product_id BIGINT NOT NULL,
-    quantity INT NOT NULL,
-    total_price BIGINT NOT NULL,
-    order_date TIMESTAMP NOT NULL,
-    created_at TIMESTAMP NOT NULL,
-    updated_at TIMESTAMP NOT NULL,
-    created_by VARCHAR(255) NOT NULL,
-    updated_by VARCHAR(255) NOT NULL,
-    FOREIGN KEY (member_id) REFERENCES member (member_id),
-    FOREIGN KEY (product_id) REFERENCES product (product_id)
-);
+-- OrderHistory 테이블은 V5 마이그레이션으로 이동했으므로 여기서는 제거합니다.
